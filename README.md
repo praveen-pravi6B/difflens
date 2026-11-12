@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.png" width="104" height="104" alt="DiffLens" width="104" height="104" />
+<img src="logo.png" width="104" alt="DiffLens" width="104" />
 
 # DiffLens
 
