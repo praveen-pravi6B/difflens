@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.png" width="28" height="28" alt="DiffLens" width="104" />
+<img src="https://raw.githubusercontent.com/praveen-pravi6B/difflens/refs/heads/main/public/logo.png" width="28" height="28" alt="DiffLens" width="104" />
 
 # DiffLens
 
