@@ -105,17 +105,6 @@ The following options are available in the app's **Options** panel.
 
 Per-side headers and cookies are useful for pages behind authentication or feature flags.
 
-## Live mode
-
-Live mirroring displays both pages in **one Chromium tab**, using two sandboxed iframes.
-
-- **Layout:** the overall viewport is 1920 × 1080. Local appears on the left (`x = 0`, width `960`); staging appears on the right (`x = 960`, width `960`). Each page receives a 960 × 1080 viewport.
-- **Interaction:** clicking or scrolling in either pane mirrors the action in the other pane.
-- **Element matching:** the mirror resolves elements using this order: `id` → `aria-label` → `name` → `href` → `role` → text → CSS path.
-- **Navigation:** mirrored link clicks use the matching element's own `href` on each side, allowing navigation in either direction.
-- **Iframe response headers:** `X-Frame-Options` and CSP `frame-ancestors` restrictions are stripped per document through Playwright routing so target pages can be embedded.
-- **Custom headers:** Basic Auth and configured headers are applied only to the matching origin.
-- **Session limits:** up to 2 concurrent live sessions, a 5-minute idle timeout, and a 20-second no-client grace period.
 
 ### Live mode limitations
 
