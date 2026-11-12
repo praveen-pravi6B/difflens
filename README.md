@@ -3,10 +3,12 @@
 Compare a **local web app** against **staging** and see exactly what changed — visually, in the text, and in the markup.
 
 <p align="center">
-  <img src="https://github.com/praveen-pravi6B/difflens/blob/main/assets/logo.png?raw=true" alt="DiffLens Logo" width="120">
+  <a href="https://github.com/praveen-pravi6B/difflens">
+    <img src="https://raw.githubusercontent.com/praveen-pravi6B/difflens/main/assets/logo.png" alt="DiffLens" width="80"/>
+  </a>
 </p>
 
-DiffLens renders both pages with **Chromium at 1920×1080** (the standard desktop screen), then produces three independent diffs:
+## About DiffLens
 
 DiffLens renders both pages with **Chromium at 1920×1080** (the standard desktop screen), then produces three independent diffs:
 
