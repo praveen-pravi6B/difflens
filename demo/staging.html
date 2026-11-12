@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northwind — Turn product data into dashboards</title>
+<meta name="description" content="Northwind helps teams build dashboards and understand their product metrics.">
+<link rel="stylesheet" href="/demo/demo.css">
+</head>
+<body class="staging">
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="#"><span class="brand-mark" aria-hidden="true"></span>Northwind</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#product">Product</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#docs">Docs</a>
+    </nav>
+    <div class="nav-right">
+      <span class="env"><i aria-hidden="true"></i>Staging</span>
+      <a class="btn ghost small" href="#signin">Sign in</a>
+      <a class="btn primary small" href="#start">Get started</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="product">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="pill"><b>BETA</b> AI summaries are in beta for select workspaces</span>
+      <h1>Turn product data into clear <em>dashboards</em>.</h1>
+      <p class="lead">Northwind helps teams build dashboards, track the metrics that matter and understand how their product is used — all in one shared workspace.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#start">Get started</a>
+        <a class="btn ghost" href="#demo">Book a demo</a>
+      </div>
+      <p class="note">Free for 14 days · No credit card required · SOC 2 Type II</p>
+      <div class="live-demo">
+        <button class="btn ghost small" type="button" id="counterBtn" data-demo-counter data-count="0">Clicked 0 times</button>
+        <a class="btn ghost small" href="/demo/next.html">Open a second page →</a>
+      </div>
+    </div>
+
+    <div class="app-mock" aria-label="Northwind dashboard preview">
+      <div class="mock-bar"><i></i><i></i><i></i><span>LIVE</span></div>
+      <div class="mock-body">
+        <div class="mock-title">
+          <div><b>Weekly overview</b>Activation &amp; retention</div>
+          <span>Last 7 days</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span>Activation</span><b>61.2%</b></div>
+          <div class="metric"><span>MRR</span><b>$42.7k</b></div>
+          <div class="metric"><span>Churn</span><b>2.4%</b></div>
+        </div>
+        <div class="chart" aria-hidden="true">
+          <div class="bar" style="height:40%"></div>
+          <div class="bar" style="height:52%"></div>
+          <div class="bar" style="height:47%"></div>
+          <div class="bar" style="height:64%"></div>
+          <div class="bar" style="height:58%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats" aria-label="Company metrics">
+  <div class="wrap stats-grid">
+    <div class="stat"><b>2×</b><span>Faster insight delivery</span></div>
+    <div class="stat"><b>99.9%</b><span>Platform uptime</span></div>
+    <div class="stat"><b>4.8/5</b><span>Average customer rating</span></div>
+    <div class="stat"><b>12k+</b><span>Product teams onboard</span></div>
+  </div>
+</section>
+
+<section class="block" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Built for product teams</div>
+      <h2>Everything you need to see what moves the needle</h2>
+      <p class="sub">One workspace for the metrics your team argues about — plus the context to act on them.</p>
+    </div>
+    <div class="features">
+      <article class="feature">
+        <div class="icon" aria-hidden="true">01</div>
+        <h3>Live funnels</h3>
+        <p>Watch every step of activation update in real time, then drill into the drop-off that matters.</p>
+      </article>
+      <article class="feature">
+        <div class="icon" aria-hidden="true">02</div>
+        <h3>Cohort retention</h3>
+        <p>Compare cohorts by signup source, plan or behaviour and see what keeps people coming back.</p>
+      </article>
+      <article class="feature">
+        <div class="icon" aria-hidden="true">03</div>
+        <h3>Revenue analytics</h3>
+        <p>Connect billing events to product usage so expansion and churn are never a surprise.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section" id="pricing">
+  <div class="wrap pricing-grid">
+    <div>
+      <div class="eyebrow">Pricing</div>
+      <h2>Simple pricing that scales with your team</h2>
+      <p class="sub">Start free, then upgrade when you need more. Every plan includes unlimited dashboards and no per-event fees.</p>
+    </div>
+    <div class="price-card">
+      <div class="price-card-top">
+        <div>
+          <div class="plan">Team</div>
+          <div class="price">$39 <small>/ seat / month</small></div>
+          <p class="billed">Billed annually · save 20%</p>
+        </div>
+        <a class="btn primary" href="#start">Get started</a>
+      </div>
+      <ul class="checks">
+        <li>Unlimited dashboards</li>
+        <li>Cohort &amp; funnel analysis</li>
+        <li>Priority support</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div>© 2026 Northwind Labs, Inc.</div>
+    <div class="foot-links">
+      <a href="#privacy">Privacy</a>
+      <a href="#terms">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const counterBtn = document.getElementById('counterBtn');
+  counterBtn.addEventListener('click', () => {
+    const count = Number(counterBtn.dataset.count || 0) + 1;
+    counterBtn.dataset.count = String(count);
+    counterBtn.textContent = `Clicked ${count} time${count === 1 ? '' : 's'}`;
+  });
+</script>
+</body>
+</html>

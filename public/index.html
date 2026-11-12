@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DiffLens — local vs staging web app comparison</title>
+<meta name="description" content="Compare a local web app with staging: pixel-level visual diff, content diff and markup diff in one report.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%2322d3ee'/%3E%3Cstop offset='.5' stop-color='%235b8cff'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Crect x='8' y='8' width='16' height='16' rx='3' fill='none' stroke='%23070a12' stroke-width='2'/%3E%3Crect x='6' y='12' width='14' height='12' rx='3' fill='%23070a12' fill-opacity='.25' stroke='%23070a12' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span>DiffLens<small>local ↔ staging</small></span>
+  </a>
+  <div class="topbar-right">
+    <span class="engine-pill"><i aria-hidden="true"></i><span id="engineText">Chromium · 1920×1080</span></span>
+    <a class="ghost-link" href="/demo/local.html" target="_blank" rel="noreferrer">Demo pages ↗</a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero-copy">
+    <div class="hero-kicker"><span class="spark" aria-hidden="true"></span>Visual + content regression review</div>
+    <h1>Catch what changed between<br><span class="grad">local</span> and <span class="grad-2">staging</span>.</h1>
+    <p>One click gives you a pixel-level visual diff, a readable content diff and an element-by-element markup diff — before it reaches production.</p>
+  </section>
+
+  <section class="compare-card">
+    <form id="compareForm" novalidate>
+      <div class="url-row">
+        <label class="url-box local" for="localUrl">
+          <span class="url-label"><i aria-hidden="true"></i>Local</span>
+          <input id="localUrl" name="localUrl" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="http://localhost:3000" aria-label="Local URL">
+          <span class="url-status">candidate</span>
+        </label>
+        <button type="button" class="swap-btn" id="swapBtn" title="Swap URLs" aria-label="Swap local and staging URLs">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14a4 4 0 0 1 0 8h-1"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7a4 4 0 0 1 0-8h1"/></svg>
+        </button>
+        <label class="url-box staging" for="stagingUrl">
+          <span class="url-label"><i aria-hidden="true"></i>Staging</span>
+          <input id="stagingUrl" name="stagingUrl" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="https://staging.example.com" aria-label="Staging URL">
+          <span class="url-status">baseline</span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary" id="compareBtn"><span class="btn-label">Compare pages</span><kbd>⌘↵</kbd></button>
+        <button type="button" class="btn ghost" id="demoBtn">Try the demo</button>
+        <button type="button" class="btn ghost" id="liveBtn" style="display: none;"><span class="live-btn-dot" aria-hidden="true"></span>Interact live</button>
+        <button type="button" class="btn ghost" id="optionsBtn" aria-expanded="false" aria-controls="optionsPanel">Options</button>
+        <span class="form-note">Runs locally · Chromium · default 1920×1080</span>
+      </div>
+
+      <div class="options" id="optionsPanel" hidden>
+        <div class="options-grid">
+          <label class="field">
+            <span>Wait after load <small>ms</small></span>
+            <input id="settleMs" type="number" min="250" max="15000" step="250" value="1500">
+          </label>
+          <label class="field">
+            <span>Pixel threshold <small>0.01 – 1</small></span>
+            <input id="pixelThreshold" type="number" min="0.01" max="1" step="0.01" value="0.12">
+          </label>
+          <label class="field wide">
+            <span>Ignore selectors <small>comma separated</small></span>
+            <input id="ignoreSelectors" type="text" placeholder=".cookie-banner, [data-testid='clock'], #live-chat">
+          </label>
+          <label class="field">
+            <span>Local headers <small>JSON</small></span>
+            <textarea id="localHeaders" rows="2" spellcheck="false" placeholder='{"Authorization":"Bearer …"}'></textarea>
+          </label>
+          <label class="field">
+            <span>Staging headers <small>JSON</small></span>
+            <textarea id="stagingHeaders" rows="2" spellcheck="false" placeholder='{"Authorization":"Bearer …"}'></textarea>
+          </label>
+          <label class="field">
+            <span>Local cookies <small>JSON array</small></span>
+            <textarea id="localCookies" rows="2" spellcheck="false" placeholder='[{"name":"session","value":"…","domain":"localhost"}]'></textarea>
+          </label>
+          <label class="field">
+            <span>Staging cookies <small>JSON array</small></span>
+            <textarea id="stagingCookies" rows="2" spellcheck="false" placeholder='[{"name":"session","value":"…","domain":"staging.example.com"}]'></textarea>
+          </label>
+          <label class="field">
+            <span>Local basic auth <small>username</small></span>
+            <input id="localAuthUsername" type="text" autocomplete="off" spellcheck="false" placeholder="username">
+          </label>
+          <label class="field">
+            <span>Local basic auth <small>password · not saved</small></span>
+            <input id="localAuthPassword" type="password" autocomplete="new-password" placeholder="password">
+          </label>
+          <label class="field">
+            <span>Staging basic auth <small>username</small></span>
+            <input id="stagingAuthUsername" type="text" autocomplete="off" spellcheck="false" placeholder="username">
+          </label>
+          <label class="field">
+            <span>Staging basic auth <small>password · not saved</small></span>
+            <input id="stagingAuthPassword" type="password" autocomplete="new-password" placeholder="password">
+          </label>
+        </div>
+        <div class="toggles">
+          <label class="check"><input id="fullPage" type="checkbox" checked> Full-page screenshots</label>
+          <label class="check"><input id="ignoreWhitespace" type="checkbox" checked> Ignore whitespace-only changes</label>
+          <label class="check"><input id="compareAttributes" type="checkbox" checked> Compare attributes</label>
+          <label class="check"><input id="normalizeOrigins" type="checkbox" checked> Ignore domain differences</label>
+          <label class="check"><input id="standardUserAgent" type="checkbox" checked> Standard Chrome user agent</label>
+          <label class="check"><input id="scrollPage" type="checkbox" checked> Scroll for lazy content</label>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <div class="status-panel" id="statusPanel" hidden aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <div class="status-copy">
+      <strong id="statusTitle">Comparing pages…</strong>
+      <span id="statusDetail">Launching Chromium · 1920×1080</span>
+    </div>
+    <span class="elapsed" id="elapsed">0.0s</span>
+  </div>
+
+  <div class="error-panel" id="errorPanel" hidden role="alert">
+    <div class="error-icon" aria-hidden="true">!</div>
+    <div class="error-copy">
+      <strong id="errorTitle">Comparison failed</strong>
+      <p id="errorMessage"></p>
+      <ul id="errorDetails" class="error-details"></ul>
+      <button type="button" class="btn ghost small" id="retryBtn">Try again</button>
+    </div>
+  </div>
+
+  <section class="live-panel" id="livePanel" hidden aria-live="polite">
+    <div class="live-head">
+      <div class="live-title">
+        <span class="live-dot" aria-hidden="true"></span>
+        <div>
+          <strong>Live mirror</strong>
+          <span id="liveMeta">Starting Chromium…</span>
+        </div>
+      </div>
+      <div class="live-urls">
+        <span class="live-url"><i class="local" aria-hidden="true"></i><span id="liveLocalUrl">—</span></span>
+        <span class="live-url"><i class="staging" aria-hidden="true"></i><span id="liveStagingUrl">—</span></span>
+      </div>
+      <div class="live-actions">
+        <button type="button" class="btn ghost small" id="liveReloadBtn">Reload both</button>
+        <button type="button" class="btn primary small" id="liveCloseBtn">End session</button>
+      </div>
+    </div>
+
+    <div class="live-stage">
+      <div class="live-screen" id="liveScreen" tabindex="0" role="application" aria-label="Live split view. Click or scroll either page and the action is mirrored on the other side.">
+        <img id="liveFrame" alt="Live split view of the local and staging pages" draggable="false">
+        <div class="live-pulses" id="livePulses" aria-hidden="true"></div>
+        <div class="live-placeholder" id="livePlaceholder">
+          <span class="spinner" aria-hidden="true"></span>
+          <b id="livePlaceholderTitle">Starting Chromium…</b>
+          <small id="livePlaceholderText">Opening local and staging in one split-view tab</small>
+        </div>
+        <span class="live-label local" aria-hidden="true">Local</span>
+        <span class="live-label staging" aria-hidden="true">Staging</span>
+        <span class="live-divider" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="live-foot">
+      <span><b>Click or scroll either half</b> — the same element is clicked on the other side, and links navigate both pages.</span>
+      <input id="liveDelaySlider" type="range" min="0" max="500" value="0" aria-label="Delay before mirrored action (ms)">
+      <span id="liveDelayValue">0</span> ms
+      <span class="live-engine" id="liveEngine"></span>
+    </div>
+
+    <div class="live-log-wrap">
+      <div class="live-log-head">
+        <span>Mirrored actions</span>
+        <span class="live-count" id="liveCount">0</span>
+      </div>
+      <ol class="live-log" id="liveLog">
+        <li class="live-log-empty">No actions yet. Click a link, button or form field in either half.</li>
+      </ol>
+      <div class="live-system" id="liveSystem"></div>
+    </div>
+  </section>
+
+  <section id="results" class="results" hidden aria-live="polite">
+    <div class="result-header">
+      <div class="result-summary">
+        <span class="verdict-badge changed" id="verdictBadge">Differences found</span>
+        <div>
+          <h2 id="resultTitle">Comparison complete</h2>
+          <p class="result-sub" id="resultSub"></p>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button type="button" class="btn ghost small" id="rerunBtn">Re-run</button>
+        <a class="btn ghost small" id="jsonLink" href="#" download>JSON</a>
+        <a class="btn primary small" id="reportLink" href="#">Export report</a>
+      </div>
+    </div>
+
+    <div class="stat-chips" id="statChips"></div>
+
+    <div class="warnings" id="warnings" hidden>
+      <strong>Heads up</strong>
+      <ul id="warningsList"></ul>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Diff sections">
+      <button type="button" class="tab active" role="tab" aria-selected="true" data-tab="visual">Visual diff <span class="tab-count" id="tabVisualCount"></span></button>
+      <button type="button" class="tab" role="tab" aria-selected="false" data-tab="content">Content <span class="tab-count" id="tabContentCount"></span></button>
+      <button type="button" class="tab" role="tab" aria-selected="false" data-tab="markup">Markup <span class="tab-count" id="tabMarkupCount"></span></button>
+      <button type="button" class="tab" role="tab" aria-selected="false" data-tab="diagnostics">Diagnostics</button>
+    </nav>
+
+    <section class="tab-panel" data-panel="visual" role="tabpanel">
+      <div class="panel-toolbar">
+        <div class="segmented" role="group" aria-label="Visual comparison mode">
+          <button type="button" class="seg active" data-visual-mode="side">Side by side</button>
+          <button type="button" class="seg" data-visual-mode="overlay">Overlay</button>
+          <button type="button" class="seg" data-visual-mode="diff">Diff only</button>
+        </div>
+        <div class="toolbar-right">
+          <span class="legend"><i class="legend-dot pink" aria-hidden="true"></i>changed pixels</span>
+          <button type="button" class="btn ghost small" id="jumpBtn" hidden>Jump to first change</button>
+        </div>
+      </div>
+      <div class="visual-note" id="visualNote" hidden></div>
+      <div class="visual-stage" id="visualStage" data-mode="side">
+        <div class="side-pane">
+          <div class="shots">
+            <figure class="shot">
+              <figcaption><span class="shot-dot local" aria-hidden="true"></span>Local <span class="shot-meta" id="localShotMeta"></span></figcaption>
+              <div class="shot-scroll" id="localScroll">
+                <a id="localShotLink" href="#" target="_blank" rel="noreferrer"><img id="localShot" alt="Local page screenshot"></a>
+              </div>
+            </figure>
+            <figure class="shot">
+              <figcaption><span class="shot-dot staging" aria-hidden="true"></span>Staging <span class="shot-meta" id="stagingShotMeta"></span></figcaption>
+              <div class="shot-scroll" id="stagingScroll">
+                <a id="stagingShotLink" href="#" target="_blank" rel="noreferrer"><img id="stagingShot" alt="Staging page screenshot"></a>
+              </div>
+            </figure>
+          </div>
+        </div>
+        <div class="overlay-pane">
+          <div class="overlay-controls">
+            <span>Local</span>
+            <input id="overlayRange" type="range" min="0" max="100" value="50" aria-label="Overlay split position">
+            <span>Staging</span>
+          </div>
+          <div class="overlay-scroll" id="overlayScroll">
+            <div class="overlay-frame" id="overlayFrame">
+              <img id="overlayStaging" alt="Staging page screenshot">
+              <img class="overlay-top" id="overlayLocal" alt="Local page screenshot">
+              <div class="overlay-divider" id="overlayDivider" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+        <div class="diff-pane">
+          <figure class="shot diff-shot">
+            <figcaption><span class="shot-dot diff" aria-hidden="true"></span>Pixel diff <span class="shot-meta" id="diffShotMeta"></span></figcaption>
+            <div class="shot-scroll">
+              <a id="diffShotLink" href="#" target="_blank" rel="noreferrer"><img id="diffShot" alt="Pixel differences highlighted in pink"></a>
+            </div>
+          </figure>
+        </div>
+      </div>
+      <div class="visual-foot">
+        <div class="diff-stats" id="diffStats"></div>
+        <div class="diff-hint">Pink marks changed pixels over a faded local page. Large solid bands usually mean content shifted vertically rather than being restyled — turn off full-page capture in Options for a stable above-the-fold diff.</div>
+      </div>
+    </section>
+
+    <section class="tab-panel" data-panel="content" role="tabpanel" hidden>
+      <div class="panel-toolbar">
+        <div class="inline-stats" id="contentStats"></div>
+        <label class="check"><input id="changesOnly" type="checkbox"> Changes only</label>
+      </div>
+      <div class="diff-view" id="contentDiff"></div>
+    </section>
+
+    <section class="tab-panel" data-panel="markup" role="tabpanel" hidden>
+      <div class="panel-toolbar">
+        <div class="inline-stats" id="markupStats"></div>
+        <input class="search" id="markupSearch" type="search" placeholder="Filter by selector, tag, text or attribute">
+      </div>
+      <div class="markup-sections" id="markupSections"></div>
+    </section>
+
+    <section class="tab-panel" data-panel="diagnostics" role="tabpanel" hidden>
+      <div class="diagnostics" id="diagnostics"></div>
+    </section>
+  </section>
+
+  <section id="emptyState" class="empty-state">
+    <div class="empty-grid">
+      <article class="empty-card">
+        <div class="empty-icon pink" aria-hidden="true">◧</div>
+        <h3>Pixel-level visual diff</h3>
+        <p>Full-page Chromium screenshots at the default 1920×1080 screen size, compared pixel by pixel. Changed regions glow pink over a faded local page.</p>
+      </article>
+      <article class="empty-card">
+        <div class="empty-icon green" aria-hidden="true">≡</div>
+        <h3>Readable content diff</h3>
+        <p>Visible text is compared line by line with word-level highlights, so new copy, removed copy and edits are obvious at a glance.</p>
+      </article>
+      <article class="empty-card">
+        <div class="empty-icon amber" aria-hidden="true">&lt;/&gt;</div>
+        <h3>Markup &amp; attribute diff</h3>
+        <p>Elements are matched by their rendered CSS path. New nodes, removed nodes and href/src/alt changes are listed with selectors.</p>
+      </article>
+    </div>
+    <p class="empty-foot">Tip: press <kbd>⌘</kbd> + <kbd>↵</kbd> to compare. Everything runs on your machine — no page data is uploaded.</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>DiffLens · local ↔ staging</span>
+  <span>Chromium rendering · default 1920×1080 viewport</span>
+</footer>
+</div>
+<script src="/app.js" type="module"></script>
+</body>
+</html>

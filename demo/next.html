@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northwind — Second page</title>
+<meta name="description" content="A second demo page used to prove that mirrored clicks navigate both live panes.">
+<link rel="stylesheet" href="/demo/demo.css">
+</head>
+<body class="local">
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/demo/local.html"><span class="brand-mark" aria-hidden="true"></span>Northwind</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="/demo/local.html">Home</a>
+      <a href="#details">Details</a>
+      <a href="#works">How it works</a>
+    </nav>
+    <div class="nav-right">
+      <span class="env"><i aria-hidden="true"></i>Second page</span>
+      <button class="btn ghost small" type="button" onclick="history.back()">← Go back</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="pill"><b>NAV</b> Mirrored navigation is working</span>
+      <h1>You are on the <em>second page</em>.</h1>
+      <p class="lead">The link you clicked in one pane was found and clicked in the other pane too, so both browsers followed it. Keep clicking here — every interaction keeps mirroring.</p>
+      <div class="cta-row">
+        <button class="btn primary" type="button" onclick="history.back()">← Go back to the first page</button>
+        <a class="btn ghost" href="#details">Read what happened</a>
+      </div>
+      <p class="note">Same markup · same selectors · one Chromium tab</p>
+    </div>
+
+    <div class="app-mock" aria-label="Navigation summary">
+      <div class="mock-bar"><i></i><i></i><i></i><span>LIVE</span></div>
+      <div class="mock-body">
+        <div class="mock-title">
+          <div><b>Navigation mirrored</b>Local ↔ staging</div>
+          <span>1 click</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span>Clicked</span><b>1×</b></div>
+          <div class="metric"><span>Followed</span><b>2×</b></div>
+          <div class="metric"><span>Tabs</span><b>1</b></div>
+        </div>
+        <div class="chart" aria-hidden="true">
+          <div class="bar" style="height:42%"></div>
+          <div class="bar" style="height:58%"></div>
+          <div class="bar" style="height:66%"></div>
+          <div class="bar" style="height:81%"></div>
+          <div class="bar" style="height:73%"></div>
+          <div class="bar" style="height:94%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="details">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What just happened</div>
+      <h2>One click, two pages, no second tab</h2>
+      <p class="sub">The live view runs both pages as iframes inside a single Chromium tab. Clicking a link resolves the element, clicks the same element in the other iframe, and each side navigates on its own origin.</p>
+    </div>
+    <div class="features" id="works">
+      <article class="feature">
+        <div class="icon" aria-hidden="true">01</div>
+        <h3>Resolve the element</h3>
+        <p>The click point is mapped into the pane, then the element is described by id, test id, aria label, name, href, role and text.</p>
+      </article>
+      <article class="feature">
+        <div class="icon" aria-hidden="true">02</div>
+        <h3>Find its twin</h3>
+        <p>The other page is searched with the same descriptor. The first unique match is clicked at its real coordinates.</p>
+      </article>
+      <article class="feature">
+        <div class="icon" aria-hidden="true">03</div>
+        <h3>Let both navigate</h3>
+        <p>Each side follows its own href, so local and staging move to the equivalent page without sharing credentials or cookies.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div>© 2026 Northwind Labs, Inc.</div>
+    <div class="foot-links">
+      <a href="/demo/local.html">First page</a>
+      <a href="#details">Details</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

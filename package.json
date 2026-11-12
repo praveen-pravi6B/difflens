@@ -1,0 +1,25 @@
+{
+  "name": "difflens",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DiffLens — compare a local web app against staging with pixel, content and markup diffs rendered by Chromium.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "setup:browser": "node scripts/install-browser.js",
+    "smoke": "node scripts/smoke.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "diff": "^7.0.0",
+    "express": "^4.21.2",
+    "pixelmatch": "^7.1.0",
+    "playwright-core": "1.65.0",
+    "pngjs": "^7.0.0",
+    "ws": "^8.22.2"
+  }
+}
