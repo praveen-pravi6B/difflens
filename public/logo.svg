@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">DiffLens logo</title>
+  <desc id="desc">A split comparison mark with code brackets and a central lens.</desc>
+  <defs>
+    <linearGradient id="gradA" x1="28" y1="28" x2="220" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A855F7"/>
+      <stop offset=".52" stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <linearGradient id="gradB" x1="52" y1="48" x2="210" y2="210" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C084FC"/>
+      <stop offset="1" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+  <path d="M48 28h78c55 0 100 45 100 100s-45 100-100 100H48c-11 0-20-9-20-20V48c0-11 9-20 20-20Z" fill="url(#gradA)"/>
+  <path d="M128 28v200h-2c-55 0-100-45-100-100S71 28 126 28h2Z" fill="#0B1020" opacity=".18"/>
+  <path d="M128 28v200" stroke="#fff" stroke-opacity=".72" stroke-width="5"/>
+  <circle cx="128" cy="128" r="57" fill="#0B1020"/>
+  <path d="m111 108-22 20 22 20M145 108l22 20-22 20" fill="none" stroke="#F8FAFC" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M185 48l5-15 5 15 15 5-15 5-5 15-5-15-15-5 15-5Z" fill="url(#gradB)"/>
+  <circle cx="204" cy="104" r="6" fill="#E0F2FE"/>
+</svg>
